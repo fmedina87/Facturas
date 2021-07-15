@@ -134,7 +134,7 @@ namespace Facturas.Servicios.Negocio
                     else
                     {
                         string _Result = string.Empty;
-                        _Result = await commandExecuteDBAsync("PA_CLIENTE_INSERTAR", CargarParametros(objCliente), new SqlParameter() { ParameterName = "@Result", Value = _Result });
+                        _Result = await commandExecuteDBAsync("PA_CLIENTE_INSERTAR", CargarParametros(objCliente), new SqlParameter() { ParameterName = "@Resultado", Value = _Result });
                         if (Convert.ToInt32(_Result) > 0)
                         {
                             idCliente = Convert.ToInt32(_Result);
@@ -163,7 +163,7 @@ namespace Facturas.Servicios.Negocio
                 if (ValidarObjeto(objCliente))
                 {
                     string _Result = string.Empty;
-                    _Result = await commandExecuteDBAsync("PA_CLIENTE_ACTUALIZAR", CargarParametros(objCliente), new SqlParameter() { ParameterName = "@Result", Value = _Result });
+                    _Result = await commandExecuteDBAsync("PA_CLIENTE_ACTUALIZAR", CargarParametros(objCliente), new SqlParameter() { ParameterName = "@Resultado", Value = _Result });
                     if (Convert.ToInt32(_Result) > 0)
                     {
                         idCliente = Convert.ToInt32(_Result);

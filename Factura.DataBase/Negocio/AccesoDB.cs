@@ -10,8 +10,7 @@ namespace Facturas.DataBase.Negocio
    public  class AccesoDB: IAccesoDB
     {
         public SqlConnection _context { get; set; }
-        public SqlTransaction _transaction { get; set; }
-       // public IServicesRepository _repository { get; set; }
+        public SqlTransaction _transaction { get; set; }        
         public IConfiguration _Configuration { get; }
         public AccesoDB(IConfiguration config)
         {
@@ -19,12 +18,11 @@ namespace Facturas.DataBase.Negocio
             {
                 _Configuration = config;
                 _context = openConnection();
-                _transaction = _context.BeginTransaction();
-         //       _repository = new servicesRepository(this);
+                _transaction = _context.BeginTransaction();         
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
 
         }

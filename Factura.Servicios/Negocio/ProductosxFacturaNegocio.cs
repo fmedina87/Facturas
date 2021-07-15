@@ -84,9 +84,9 @@ namespace Facturas.Servicios.Negocio
                 {
 
                     string _Result = string.Empty;
-                    _Result = await commandExecuteDBAsync("PA_PRODUCTOSXFACTURA_INSERTAR", CargarParametros(objProductosxFactura), new SqlParameter() { ParameterName = "@Result", Value = _Result });
+                    _Result = await commandExecuteDBAsync("PA_PRODUCTOSXFACTURA_INSERTAR", CargarParametros(objProductosxFactura), new SqlParameter() { ParameterName = "@Resultado", Value = _Result });
                     if (Convert.ToInt32(_Result) > 0)
-                    {
+                    {                        
                         idProductosxFactura = Convert.ToInt32(_Result);                        
                     }
                     else
