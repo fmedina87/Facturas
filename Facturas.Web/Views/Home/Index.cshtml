@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Inicio";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Facturas</h1>
+
+    <div class="form-group col-md-4 text-md-left">
+        <h5><i class="fa fa-file-text-o"></i>Consultar Factura:</h5>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <br />
+                <div class="input-group-text bg-white">
+                    <i class="fa fa-search">
+                    </i>
+                </div>
+            </div>
+            @Html.TextBox("txtValorFiltro", "", new { @class = "form-control input-sm", placeholder = "ID FACTURA", data_val = "true", data_val_required = "Debe ingresar un valor", data_val_regex = "La longitud mínima del campo es de 1 caracter." })
+            <button id="btnAplicarFiltros" class="btn btn-primary btn-xs ladda-button" data-style="zoom-in"><i class="fa fa-plus"></i>Buscar</button>
+            <button type="button" onclick="location.href='@Url.Action("consultarFactura", "Factura")'" />
+        </div>
+    </div>
+</div>

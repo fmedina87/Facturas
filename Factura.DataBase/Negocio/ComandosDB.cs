@@ -18,7 +18,7 @@ namespace Facturas.DataBase.Negocio
         /// <param name="lstInputParameters">listado de parametros de entrada</param>
         /// <param name="outPutParameter">Valor de retorno</param>
         /// <returns></returns>
-        public async Task<string> commandExecuteDBAsync(string spName, Dictionary<string, object> lstInputParameters, SqlParameter outPutParameter)
+        public string commandExecuteDB(string spName, Dictionary<string, object> lstInputParameters, SqlParameter outPutParameter)
         {
             string valorParametroSalida = string.Empty;
             try
@@ -36,7 +36,7 @@ namespace Facturas.DataBase.Negocio
                 comando.Parameters.Add(outPutParameter);
                 try
                 {
-                    var reader = await comando.ExecuteNonQueryAsync();
+                    var reader =  comando.ExecuteNonQuery();
                     valorParametroSalida = Convert.ToString(comando.Parameters[outPutParameter.ParameterName].Value);
                 }
                 catch (System.Exception ex)

@@ -12,5 +12,6 @@ namespace Facturas.Entidades.Modelos
         public int cantidadProductos { get; set; }
         public double valorUnitario { get; set; }
         public double valorTotal { get; set; }
+        public string Producto { get; set; }
     }
 }

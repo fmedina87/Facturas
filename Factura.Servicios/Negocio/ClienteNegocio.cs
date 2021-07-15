@@ -21,26 +21,7 @@ namespace Facturas.Servicios.Negocio
             _dbAcces = dbAccess;
         }
         #region Validaciones
-        private bool validarExisteCliente(Cliente objCliente)
-        {
-            bool Existe = false;
-            try
-            {
-                Task<Cliente> objClienteAnterior = ConsultarxId(objCliente.idCliente);
-                if(objClienteAnterior!=null && objClienteAnterior.Result != null)
-                {
-                    if((objCliente.numeroIdentificacion== objClienteAnterior.Result.numeroIdentificacion)&&(objCliente.idTipoIdentificacion == objClienteAnterior.Result.idTipoIdentificacion))
-                    {
-                        Existe = true;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return Existe;
-        }
+
         private bool ValidarObjeto(Cliente objCliente)
         {
             bool Continuar = true;
@@ -117,24 +98,75 @@ namespace Facturas.Servicios.Negocio
             }
             return lstParametros;
         }
+        public Dictionary<string, object> CargarParametrosActualizar(Cliente objCliente)
+        {
+            Dictionary<string, object> lstParametros = new Dictionary<string, object>();
+            try
+            {
+                if (objCliente.idCliente > 0)
+                {
+                    lstParametros.Add("@idCliente", objCliente.idCliente);
+                }
+                if (string.IsNullOrEmpty(objCliente.PrimerApellido))
+                {
+                    lstParametros.Add("@PrimerApellido", DBNull.Value);
+                }
+                else
+                {
+                    lstParametros.Add("@PrimerApellido", objCliente.PrimerApellido);
+                }
+                if (string.IsNullOrEmpty(objCliente.SegundoNombre))
+                {
+                    lstParametros.Add("@SegundoNombre", DBNull.Value);
+                }
+                else
+                {
+                    lstParametros.Add("@SegundoNombre", objCliente.SegundoNombre);
+                }
+                if (string.IsNullOrEmpty(objCliente.SegundoApellido))
+                {
+                    lstParametros.Add("@SegundoApellido", DBNull.Value);
+                }
+                else
+                {
+                    lstParametros.Add("@SegundoApellido", objCliente.SegundoApellido);
+                }
+                lstParametros.Add("@PrimerNombre", objCliente.PrimerNombre);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return lstParametros;
+        }
         #endregion
         #region Crear
-        public async Task<int> crear(Cliente objCliente)
+        public int crear(Cliente objCliente)
         {
-            int idCliente = 0;     
+            int idCliente = 0;
             try
-            {                
+            {
                 if (ValidarObjeto(objCliente))
                 {
-                    if (validarExisteCliente(objCliente))
+                    bool ExisteCliente = false;
+                    Cliente objClienteAnterior = ConsultarxNumeroIdentificacion(objCliente.numeroIdentificacion).Result;
+                    if (objClienteAnterior != null && objClienteAnterior.idCliente >= 0)
                     {
-                        var Actualizado = Actualizar(objCliente);
+                        if ((objCliente.numeroIdentificacion == objClienteAnterior.numeroIdentificacion) && (objCliente.idTipoIdentificacion == objClienteAnterior.idTipoIdentificacion))
+                        {
+                            ExisteCliente = true;
+                        }
+                    }
+                    if (ExisteCliente)
+                    {
+                        objCliente.idCliente = objClienteAnterior.idCliente;
                         idCliente = objCliente.idCliente;
+                        var Actualizado = Actualizar(objCliente);
                     }
                     else
                     {
                         string _Result = string.Empty;
-                        _Result = await commandExecuteDBAsync("PA_CLIENTE_INSERTAR", CargarParametros(objCliente), new SqlParameter() { ParameterName = "@Resultado", Value = _Result });
+                        _Result =  commandExecuteDB("PA_CLIENTE_INSERTAR", CargarParametros(objCliente), new SqlParameter() { ParameterName = "@Resultado", Value = _Result });
                         if (Convert.ToInt32(_Result) > 0)
                         {
                             idCliente = Convert.ToInt32(_Result);
@@ -155,7 +187,7 @@ namespace Facturas.Servicios.Negocio
         }
         #endregion
         #region Actualizar
-        private async Task<int> Actualizar(Cliente objCliente)
+        private int Actualizar(Cliente objCliente)
         {
             int idCliente = 0;
             try
@@ -163,7 +195,7 @@ namespace Facturas.Servicios.Negocio
                 if (ValidarObjeto(objCliente))
                 {
                     string _Result = string.Empty;
-                    _Result = await commandExecuteDBAsync("PA_CLIENTE_ACTUALIZAR", CargarParametros(objCliente), new SqlParameter() { ParameterName = "@Resultado", Value = _Result });
+                    _Result = commandExecuteDB("PA_CLIENTE_ACTUALIZAR", CargarParametrosActualizar(objCliente), new SqlParameter() { ParameterName = "@Resultado", Value = _Result });
                     if (Convert.ToInt32(_Result) > 0)
                     {
                         idCliente = Convert.ToInt32(_Result);

@@ -28,7 +28,7 @@ namespace Facturas.Servicios.Negocio
             {
                 throw ex;
             }
-           
+
         }
         #region Validaciones
         private bool ValidarObjeto(Factura objFactura)
@@ -100,7 +100,7 @@ namespace Facturas.Servicios.Negocio
                 if (objFactura != null)
                 {
                     lstParametros.Add("@idCliente", objFactura.idCliente);
-                    lstParametros.Add("@idtipoPago", objFactura.idtipoPago);                    
+                    lstParametros.Add("@idtipoPago", objFactura.idtipoPago);
                     lstParametros.Add("@numeroFactura", objFactura.numeroFactura);
                     lstParametros.Add("@subTotal", objFactura.subTotal);
                     lstParametros.Add("@descuento", objFactura.descuento);
@@ -122,7 +122,7 @@ namespace Facturas.Servicios.Negocio
         }
         #endregion
         #region Crear
-        public async Task<int> crear(Factura objFactura)
+        public int crear(Factura objFactura)
         {
             int idFactura = 0;
             try
@@ -131,28 +131,26 @@ namespace Facturas.Servicios.Negocio
                 {
 
                     string _Result = string.Empty;
-                    objFactura.idCliente = await _repositorio.Cliente.crear(objFactura.Cliente);
-                    _Result = await commandExecuteDBAsync("PA_FACTURA_INSERTAR", CargarParametros(objFactura), new SqlParameter() { ParameterName = "@Resultado", Value = _Result });
+                    objFactura.idCliente =  _repositorio.Cliente.crear(objFactura.Cliente);
+                    _Result = commandExecuteDB("PA_FACTURA_INSERTAR", CargarParametros(objFactura), new SqlParameter() { ParameterName = "@Resultado", Value = _Result });
                     if (Convert.ToInt32(_Result) > 0)
                     {
                         idFactura = Convert.ToInt32(_Result);
-                        foreach ( ProductosxFactura objProducto in objFactura.Productos)
+                        foreach (ProductosxFactura objProducto in objFactura.Productos)
                         {
                             objProducto.idFactura = idFactura;
-                            objProducto.idProducto = await _repositorio.ProductosxFactura.crear(objProducto);
+                            objProducto.idProducto =  _repositorio.ProductosxFactura.crear(objProducto);
                         }
                         _dbAcces.SaveChange();
                     }
                     else
                     {
                         throw new Exception("No se obtuvo un identificador válido para la factura.");
-
                     }
                 }
             }
             catch (Exception ex)
-            {
-                _dbAcces.DiscardChange();
+                {
                 throw new Exception(string.Format("No se pudo generar la factura. Se presentó el siguiente error: {0}. Por favor valide e intente nuevamente. ", ex.Message));
             }
             return idFactura;
@@ -169,8 +167,8 @@ namespace Facturas.Servicios.Negocio
                     Dictionary<string, object> lstParametros = new Dictionary<string, object>();
                     lstParametros.Add("@IdFactura", idFactura);
                     lstParametros.Add("@TipoConsulta", 1);
-                    objFactura = Utilidades.MapObjectInstance<Factura>(await commandExecuteDBAsync("PA_FACTURA_CONSULTAR", lstParametros)).FirstOrDefault();
-                    if(objFactura != null)
+                    objFactura = Utilidades.MapObjectInstance<Factura>( await commandExecuteDBAsync("PA_FACTURA_CONSULTAR", lstParametros)).FirstOrDefault();
+                    if (objFactura != null)
                     {
                         if (objFactura.idCliente > 0)
                         {
@@ -193,9 +191,9 @@ namespace Facturas.Servicios.Negocio
                     {
                         throw new Exception("No se encontró una factura con el identificador solicitado.");
                     }
-                 
+
                 }
-                
+
             }
             catch (Exception ex)
             {

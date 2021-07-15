@@ -75,7 +75,7 @@ namespace Facturas.Servicios.Negocio
         }
         #endregion
         #region Crear
-        public async Task<int> crear(ProductosxFactura objProductosxFactura)
+        public  int crear(ProductosxFactura objProductosxFactura)
         {
             int idProductosxFactura = 0;            
             try
@@ -84,7 +84,7 @@ namespace Facturas.Servicios.Negocio
                 {
 
                     string _Result = string.Empty;
-                    _Result = await commandExecuteDBAsync("PA_PRODUCTOSXFACTURA_INSERTAR", CargarParametros(objProductosxFactura), new SqlParameter() { ParameterName = "@Resultado", Value = _Result });
+                    _Result =  commandExecuteDB("PA_PRODUCTOSXFACTURA_INSERTAR", CargarParametros(objProductosxFactura), new SqlParameter() { ParameterName = "@Resultado", Value = _Result });
                     if (Convert.ToInt32(_Result) > 0)
                     {                        
                         idProductosxFactura = Convert.ToInt32(_Result);                        
