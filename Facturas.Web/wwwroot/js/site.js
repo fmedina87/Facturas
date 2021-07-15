@@ -1,4 +1,31 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿$(document).ready(function () {
+    // #region Funciones
+    var App = {
+        CargarAccionesBotonesPrincipales: function () {
 
-// Write your JavaScript code.
+            // Botón Refrescar Tabla
+            $("#btnAplicarBusqueda").on('click', function () {
+                App.Controlador.ConsultarListadoPrincipal();
+            });
+        },
+        Controlador: {
+            ConsultarListadoPrincipal: function () {
+                ActivarDesactivarLoading("iboxTabla");
+                ajaxPartialView('consultarFactura', 'Factura', null,
+                    function (respHtml) {
+                        $("#divTabla").empty();
+                        $("#divTabla").html(respHtml);
+                    }, undefined,
+                    function () {
+                        ActivarDesactivarLoading("iboxTabla");
+                    });
+            }
+        },
+
+    }
+    function ActivarDesactivarLoading(idDiv) {
+        var div = $('#' + idDiv).children('.ibox-content');
+        div.toggleClass('sk-loading');
+    }
+    // #endregion Funciones   
+});

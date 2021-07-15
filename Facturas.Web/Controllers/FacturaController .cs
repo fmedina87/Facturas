@@ -30,7 +30,7 @@ namespace Facturas.Web.Controllers
             int idFactura = 0;
             try
             {
-                idFactura =  _Factura.crear(objFactura);
+                idFactura = _Factura.crear(objFactura);
             }
             catch (Exception ex)
             {
@@ -39,24 +39,21 @@ namespace Facturas.Web.Controllers
             return idFactura;
         }
         [HttpGet("consultarFactura")]
-        public PartialViewResult  ConsultarxId(int idFactura)
+        public PartialViewResult ConsultarxId(int idFactura)
         {
             Factura objFactura = new Factura();
             try
             {
-                if (idFactura <= 0)
-                {
-                    idFactura = 1;
-                }
-               var _objFactura =  _Factura.ConsultarxId(idFactura);
-                if(_objFactura!=null && _objFactura.Result != null)
+                var _objFactura = _Factura.ConsultarxId(idFactura);
+                if (_objFactura != null && _objFactura.Result != null)
                 {
                     objFactura = _objFactura.Result;
                 }
             }
             catch (Exception ex)
             {
-                throw ex;
+                ViewBag.MensajeError = ex.InnerException.Message;
+                return PartialView("_error");
             }
             return PartialView("_verDetalleFactura", objFactura);
         }

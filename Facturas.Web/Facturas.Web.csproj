@@ -14,4 +14,12 @@
     <ProjectReference Include="..\Factura.Servicios\Facturas.Servicios.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Scripts\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\js\Factura\facturaController.js" />
+  </ItemGroup>
+
 </Project>
